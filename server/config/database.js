@@ -5,16 +5,6 @@ let pool;
 function getPool() {
   if (!pool) {
     const requiredVariables = ["DB_HOST", "DB_USER", "DB_PASSWORD", "DB_NAME"];
-
-    if (
-      !requiredVariables.some((name) => process.env[name]) &&
-      !process.env.VERCEL &&
-      process.env.NODE_ENV !== "production"
-    ) {
-      pool = require("./db");
-      return pool;
-    }
-
     const missingVariables = requiredVariables.filter((name) => !process.env[name]);
 
     if (missingVariables.length > 0) {
