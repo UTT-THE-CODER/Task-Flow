@@ -1,8 +1,8 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const pool = require("../config/database");
-const { getJwtConfig } = require("../config/jwtConfig");
+const pool = require("../config/db");
+const { secret, expiresIn } = require("../config/jwt");
 const authMiddleware = require("../middleware/authMiddleware");
 
 const router = express.Router();
@@ -55,7 +55,6 @@ router.post("/login", async (req, res) => {
       return res.status(401).json({ message: "Incorrect email or password." });
     }
 
-    const { secret, expiresIn } = getJwtConfig();
     const token = jwt.sign({ id: user.id }, secret, { expiresIn });
     res.json({ token, user: { id: user.id, name: user.name, email: user.email } });
   } catch (error) {

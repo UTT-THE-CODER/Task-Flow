@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
-const pool = require("./config/database");
+const pool = require("./config/db");
+const { secret } = require("./config/jwt");
 
 const app = express();
 
@@ -10,19 +11,15 @@ app.use(express.json());
 app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/tasks", require("./routes/taskRoutes"));
 
-const PORT = process.env.PORT || 5000;
+const PORT = 5000;
 
-if (require.main === module) {
-  Promise.resolve()
-    .then(() => pool.query("SELECT 1"))
-    .then(() => {
-      console.log("MySQL connected");
-      app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-    })
-    .catch((error) => {
-      console.error("Could not connect to MySQL:", error.message);
-      process.exit(1);
-    });
-}
-
-module.exports = app;
+pool
+  .query("SELECT 1")
+  .then(() => {
+    console.log("MySQL connected");
+    app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+  })
+  .catch((error) => {
+    console.log("Could not connect to MySQL:", error.code);
+    process.exit(1);
+  });

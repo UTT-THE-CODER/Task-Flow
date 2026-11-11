@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const { getJwtConfig } = require("../config/jwtConfig");
+const { secret } = require("../config/jwt");
 
 function authMiddleware(req, res, next) {
   const header = req.headers.authorization || "";
@@ -8,8 +8,6 @@ function authMiddleware(req, res, next) {
   if (!token) {
     return res.status(401).json({ message: "Please log in to continue." });
   }
-
-  const { secret } = getJwtConfig();
 
   try {
     const decoded = jwt.verify(token, secret);
